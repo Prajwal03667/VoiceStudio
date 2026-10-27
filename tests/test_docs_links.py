@@ -2,6 +2,12 @@
 
 Renames (OmniVoice -> VoiceStudio, moved guides, reworded headings) silently
 break in-repo links; this keeps every relative link and anchor resolvable.
+
+The scan covers every Markdown page a reader reaches from ``README.md``, root
+pages included (#2903): ``CHANGELOG.md`` and ``SPONSORS.md`` sat outside it, so
+links there kept pointing at files a later release deleted. A released entry is
+a historical record and is never rewritten to say something else — name a path
+that no longer exists as inline code instead of linking it.
 """
 import re
 from collections import Counter
@@ -10,7 +16,13 @@ from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parents[1]
 _DOCS = sorted(
-    {*(_ROOT / "docs").rglob("*.md"), *(_ROOT / ".github").glob("*.md"), _ROOT / "README.md"}
+    {
+        *(_ROOT / "docs").rglob("*.md"),
+        *(_ROOT / ".github").glob("*.md"),
+        _ROOT / "README.md",
+        _ROOT / "CHANGELOG.md",
+        _ROOT / "SPONSORS.md",
+    }
 )
 _LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 _HEADING = re.compile(r"#{1,6}\s+(.*?)\s*#*\s*$")
